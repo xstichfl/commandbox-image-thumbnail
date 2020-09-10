@@ -2,8 +2,9 @@ component accessors="true" {
 
     property name="imagePath";
     property name="thumbnailPath";
+    property name="thumbnailWidth" type="numeric";
 
-    public function run(required string imagePath, string thumbnailPath) {
+    public function run(required string imagePath, string thumbnailPath, numeric thumbnailWidth = 150) {
 
         setImagePath(arguments.imagePath);
         if (!directoryExists(getImagePath())) {
@@ -21,6 +22,7 @@ component accessors="true" {
         } else {
             setThumbnailPath(arguments.thumbnailPath);
         }
+        setThumbnailWidth(arguments.thumbnailWidth);
 
         scanImagePath();
         startWatcher();
@@ -64,7 +66,7 @@ component accessors="true" {
 
         try {
             local.image = imageRead(local.imagePath);
-            local.image.resize(150);
+            local.image.resize(getThumbnailWidth());
             local.image.write(local.thumbnailPath);
             print.greenLine(arguments.fileName & " created.").toConsole();
         } catch (any e) {
